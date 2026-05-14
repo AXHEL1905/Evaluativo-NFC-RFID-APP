@@ -1,0 +1,2394 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¡TRATO O NO TRATO!</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700&family=Rajdhani:wght@400;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --gold: #FFD700;
+      --gold-light: #FFF4A3;
+      --gold-dark: #B8860B;
+      --red: #C8102E;
+      --red-dark: #8B0000;
+      --navy: #0A0E1A;
+      --navy-mid: #111827;
+      --navy-light: #1E2A3A;
+      --blue-accent: #1E40AF;
+      --white: #F8F4E8;
+      --shadow-gold: 0 0 30px rgba(255, 215, 0, 0.4);
+      --shadow-red: 0 0 30px rgba(200, 16, 46, 0.5);
+    }
+
+    body.light-theme {
+      --navy: #e0e5ec;
+      --navy-mid: #d1d9e6;
+      --navy-light: #f0f4f8;
+      --white: #111827;
+      --gold-dark: #b8860b;
+      --shadow-gold: 0 0 20px rgba(218, 165, 32, 0.5);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--navy);
+      font-family: 'Rajdhani', sans-serif;
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image:
+        radial-gradient(ellipse at 20% 50%, rgba(30, 64, 175, 0.1) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(200, 16, 46, 0.05) 0%, transparent 50%),
+        repeating-linear-gradient(0deg,
+          transparent,
+          transparent 60px,
+          rgba(200, 165, 0, 0.03) 60px,
+          rgba(200, 165, 0, 0.03) 61px);
+      transition: background 0.3s, filter 0.3s;
+    }
+
+    /* ===== SPOTLIGHT EFFECT ===== */
+    .spotlight {
+      position: fixed;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(255, 215, 0, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      animation: spotPulse 4s ease-in-out infinite;
+    }
+
+    @keyframes spotPulse {
+
+      0%,
+      100% {
+        opacity: 0.6;
+        transform: translateX(-50%) scale(1);
+      }
+
+      50% {
+        opacity: 1;
+        transform: translateX(-50%) scale(1.1);
+      }
+    }
+
+    /* ===== HEADER ===== */
+    #header {
+      text-align: center;
+      padding: 20px 10px 10px;
+      position: relative;
+      z-index: 10;
+    }
+
+    #header h1 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(1.8rem, 5vw, 3.5rem);
+      color: var(--gold);
+      text-shadow: 0 0 40px rgba(255, 215, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.9);
+      letter-spacing: 4px;
+      line-height: 1.1;
+    }
+
+    #header p {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(0.75rem, 2vw, 1rem);
+      color: rgba(255, 215, 0, 0.6);
+      letter-spacing: 8px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .header-line {
+      width: 80%;
+      max-width: 600px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 10px auto 0;
+    }
+
+    /* ===== GAME CONTAINER ===== */
+    #game {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 10px 15px 30px;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* ===== PHASE SCREENS ===== */
+    .phase-screen {
+      display: none;
+    }
+
+    .phase-screen.active {
+      display: block;
+    }
+
+    /* ===== INTRO SCREEN ===== */
+    #intro-screen {
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    .intro-text {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      color: var(--white);
+      line-height: 1.8;
+      max-width: 700px;
+      margin: 0 auto 30px;
+    }
+
+    .intro-text span {
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    .btn-main {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      padding: 16px 50px;
+      background: linear-gradient(135deg, #C8102E, #8B0000);
+      color: var(--white);
+      border: 2px solid var(--gold);
+      border-radius: 4px;
+      cursor: pointer;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      box-shadow: 0 0 30px rgba(200, 16, 46, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-main::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+      transform: rotate(45deg) translateX(-100%);
+      transition: transform 0.5s;
+    }
+
+    .btn-main:hover::before {
+      transform: rotate(45deg) translateX(100%);
+    }
+
+    .btn-main:hover {
+      box-shadow: 0 0 50px rgba(200, 16, 46, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .btn-main:active {
+      transform: translateY(0);
+    }
+
+    /* ===== PRIZE BOARD (intro) ===== */
+    .prize-preview {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 4px;
+      max-width: 450px;
+      margin: 20px auto 30px;
+    }
+
+    .prize-item {
+      padding: 6px 10px;
+      border-radius: 3px;
+      font-family: 'Cinzel', serif;
+      font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+      font-weight: 700;
+      text-align: center;
+      border: 1px solid rgba(255, 215, 0, 0.2);
+    }
+
+    .prize-item.low {
+      background: rgba(30, 40, 90, 0.7);
+      color: #7CB9E8;
+    }
+
+    .prize-item.mid {
+      background: rgba(20, 60, 20, 0.7);
+      color: #90EE90;
+    }
+
+    .prize-item.high {
+      background: rgba(80, 40, 0, 0.7);
+      color: #FFD700;
+    }
+
+    .prize-item.top {
+      background: rgba(120, 0, 0, 0.7);
+      color: #FF6B6B;
+    }
+
+    /* ===== MAIN GAME LAYOUT ===== */
+    #main-game {
+      display: grid;
+      grid-template-columns: 160px 1fr 160px;
+      grid-template-rows: auto auto auto;
+      gap: 12px;
+      align-items: start;
+    }
+
+    @media (max-width: 768px) {
+      #main-game {
+        grid-template-columns: 1fr;
+      }
+
+      .prize-board-left {
+        display: none !important;
+      }
+
+      .prize-board-right {
+        display: none !important;
+      }
+
+      .mobile-prize-board {
+        display: grid !important;
+      }
+    }
+
+    /* ===== PRIZE BOARDS ===== */
+    .prize-board {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      grid-row: 1 / 3;
+    }
+
+    .prize-board-left {
+      grid-column: 1;
+    }
+
+    .prize-board-right {
+      grid-column: 3;
+    }
+
+    .mobile-prize-board {
+      display: none;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+      grid-column: 1;
+    }
+
+    .prize-tag {
+      padding: 5px 8px;
+      border-radius: 3px;
+      font-family: 'Cinzel', serif;
+      font-size: clamp(0.6rem, 1.2vw, 0.8rem);
+      font-weight: 700;
+      text-align: center;
+      border-left: 3px solid;
+      transition: all 0.4s ease;
+      white-space: nowrap;
+    }
+
+    .prize-tag.active.low {
+      background: rgba(30, 50, 120, 0.8);
+      color: #7CB9E8;
+      border-color: #4A90D9;
+    }
+
+    .prize-tag.active.mid {
+      background: rgba(20, 70, 20, 0.8);
+      color: #90EE90;
+      border-color: #32CD32;
+    }
+
+    .prize-tag.active.high {
+      background: rgba(100, 60, 0, 0.8);
+      color: #FFD700;
+      border-color: #FFD700;
+    }
+
+    .prize-tag.active.top {
+      background: rgba(140, 0, 0, 0.8);
+      color: #FF4444;
+      border-color: #FF0000;
+    }
+
+    .prize-tag.eliminated {
+      background: rgba(20, 20, 30, 0.5);
+      color: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.05);
+      text-decoration: line-through;
+      transform: scale(0.97);
+    }
+
+    /* ===== CENTER AREA ===== */
+    .center-area {
+      grid-column: 2;
+    }
+
+    /* ===== STATUS BAR ===== */
+    #status-bar {
+      background: rgba(255, 215, 0, 0.08);
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      border-radius: 6px;
+      padding: 10px 16px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .status-item {
+      text-align: center;
+    }
+
+    .status-label {
+      font-size: 0.65rem;
+      color: rgba(255, 215, 0, 0.6);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-family: 'Cinzel', serif;
+    }
+
+    .status-value {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(0.9rem, 2vw, 1.2rem);
+      color: var(--gold);
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+
+    /* ===== BRIEFCASES GRID ===== */
+    #cases-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 600px) {
+      #cases-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+      }
+    }
+
+    .briefcase {
+      aspect-ratio: 1;
+      background: linear-gradient(145deg, #2A1A00, #1A0F00);
+      border: 2px solid var(--gold-dark);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 215, 0, 0.15);
+    }
+
+    .briefcase::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 40%;
+      background: linear-gradient(180deg, rgba(255, 215, 0, 0.08), transparent);
+      border-radius: 6px 6px 0 0;
+    }
+
+    .briefcase .case-num {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(0.9rem, 2vw, 1.2rem);
+      color: var(--gold);
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+      z-index: 1;
+    }
+
+    .briefcase .case-icon {
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      margin-bottom: 2px;
+      z-index: 1;
+    }
+
+    .briefcase:hover:not(.disabled):not(.my-case) {
+      transform: translateY(-4px) scale(1.05);
+      border-color: var(--gold);
+      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4), inset 0 1px 0 rgba(255, 215, 0, 0.3);
+      background: linear-gradient(145deg, #3D2600, #2A1A00);
+    }
+
+    .briefcase.my-case {
+      background: linear-gradient(145deg, #1A0020, #0E0015);
+      border-color: #9B59B6;
+      box-shadow: 0 0 25px rgba(155, 89, 182, 0.5), inset 0 1px 0 rgba(155, 89, 182, 0.2);
+      cursor: default;
+      animation: myCasePulse 3s ease-in-out infinite;
+    }
+
+    .briefcase.my-case .case-num {
+      color: #D7BDE2;
+      text-shadow: 0 0 10px rgba(155, 89, 182, 0.7);
+    }
+
+    @keyframes myCasePulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 25px rgba(155, 89, 182, 0.5);
+      }
+
+      50% {
+        box-shadow: 0 0 40px rgba(155, 89, 182, 0.8);
+      }
+    }
+
+    .briefcase.opened {
+      background: rgba(10, 14, 26, 0.5);
+      border-color: rgba(255, 255, 255, 0.08);
+      cursor: default;
+      opacity: 0.4;
+    }
+
+    .briefcase.opened .case-icon {
+      filter: grayscale(1);
+      opacity: 0.3;
+    }
+
+    .briefcase.opened .case-num {
+      color: rgba(255, 255, 255, 0.2);
+      text-shadow: none;
+    }
+
+    .briefcase.disabled {
+      cursor: not-allowed;
+    }
+
+    .briefcase.highlight {
+      animation: highlightPulse 0.6s ease-in-out infinite alternate;
+    }
+
+    @keyframes highlightPulse {
+      from {
+        border-color: var(--gold);
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+      }
+
+      to {
+        border-color: #FFF;
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+      }
+    }
+
+    /* ===== PLAYER CASE DISPLAY ===== */
+    #player-case-display {
+      background: linear-gradient(135deg, rgba(155, 89, 182, 0.15), rgba(155, 89, 182, 0.05));
+      border: 2px solid rgba(155, 89, 182, 0.5);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    #player-case-display .label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 3px;
+      color: rgba(215, 189, 226, 0.7);
+      text-transform: uppercase;
+    }
+
+    #player-case-display .value {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(1.2rem, 3vw, 1.6rem);
+      color: #D7BDE2;
+      text-shadow: 0 0 15px rgba(155, 89, 182, 0.8);
+    }
+
+    /* ===== BANKER AREA ===== */
+    #banker-area {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, rgba(30, 64, 175, 0.2), rgba(30, 64, 175, 0.05));
+      border: 1px solid rgba(30, 64, 175, 0.5);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      display: none;
+    }
+
+    #banker-area.show {
+      display: block;
+      animation: fadeInUp 0.5s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .banker-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(0.8rem, 2vw, 1.1rem);
+      color: #7CB9E8;
+      letter-spacing: 3px;
+      margin-bottom: 8px;
+    }
+
+    .banker-phone {
+      font-size: 2rem;
+      animation: phonering 0.5s ease-in-out 3;
+      display: inline-block;
+      margin-bottom: 5px;
+    }
+
+    @keyframes phonering {
+
+      0%,
+      100% {
+        transform: rotate(0);
+      }
+
+      25% {
+        transform: rotate(-15deg);
+      }
+
+      75% {
+        transform: rotate(15deg);
+      }
+    }
+
+    .banker-offer {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(2rem, 6vw, 4rem);
+      color: var(--gold);
+      text-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
+      margin: 10px 0;
+      animation: offerPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes offerPop {
+      from {
+        transform: scale(0.5);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .banker-msg {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(0.85rem, 2vw, 1rem);
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 16px;
+      font-style: italic;
+    }
+
+    .banker-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-deal {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      padding: 14px 40px;
+      background: linear-gradient(135deg, #1B5E20, #0A3D0A);
+      color: #A5D6A7;
+      border: 2px solid #4CAF50;
+      border-radius: 4px;
+      cursor: pointer;
+      letter-spacing: 3px;
+      box-shadow: 0 0 25px rgba(76, 175, 80, 0.4);
+      transition: all 0.3s;
+    }
+
+    .btn-deal:hover {
+      background: linear-gradient(135deg, #2E7D32, #1B5E20);
+      box-shadow: 0 0 40px rgba(76, 175, 80, 0.7);
+      transform: translateY(-2px);
+    }
+
+    .btn-nodeal {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      padding: 14px 40px;
+      background: linear-gradient(135deg, #B71C1C, #7F0000);
+      color: #FFCDD2;
+      border: 2px solid #F44336;
+      border-radius: 4px;
+      cursor: pointer;
+      letter-spacing: 3px;
+      box-shadow: 0 0 25px rgba(244, 67, 54, 0.4);
+      transition: all 0.3s;
+    }
+
+    .btn-nodeal:hover {
+      background: linear-gradient(135deg, #C62828, #B71C1C);
+      box-shadow: 0 0 40px rgba(244, 67, 54, 0.7);
+      transform: translateY(-2px);
+    }
+
+    /* ===== INSTRUCTION BAR ===== */
+    #instruction {
+      background: rgba(255, 215, 0, 0.06);
+      border-top: 1px solid rgba(255, 215, 0, 0.1);
+      border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+      padding: 8px 16px;
+      text-align: center;
+      margin-bottom: 12px;
+      font-family: 'Cinzel', serif;
+      font-size: clamp(0.8rem, 2vw, 1rem);
+      color: var(--gold-light);
+      letter-spacing: 1px;
+    }
+
+    /* ===== REVEAL MODAL ===== */
+    #modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      display: none;
+      backdrop-filter: blur(5px);
+    }
+
+    #modal-overlay.show {
+      display: flex;
+    }
+
+    #modal-box {
+      background: linear-gradient(145deg, #0A0E1A, #111827);
+      border: 2px solid var(--gold);
+      border-radius: 12px;
+      padding: 40px 50px;
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 0 80px rgba(255, 215, 0, 0.3);
+      animation: modalIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes modalIn {
+      from {
+        transform: scale(0.7) translateY(-50px);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-icon {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+
+    .modal-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      color: var(--gold);
+      text-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+      margin-bottom: 8px;
+    }
+
+    .modal-subtitle {
+      font-family: 'Cinzel', serif;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: clamp(0.85rem, 2vw, 1rem);
+      margin-bottom: 20px;
+    }
+
+    .modal-amount {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(2.5rem, 7vw, 4.5rem);
+      color: var(--gold);
+      text-shadow: 0 0 50px rgba(255, 215, 0, 1);
+      margin: 16px 0;
+    }
+
+    .modal-detail {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(0.85rem, 2vw, 1rem);
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .modal-detail strong {
+      color: var(--gold-light);
+    }
+
+    .btn-restart {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(0.9rem, 2vw, 1.1rem);
+      padding: 12px 35px;
+      background: linear-gradient(135deg, var(--gold-dark), #8B6914);
+      color: var(--navy);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      letter-spacing: 2px;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    }
+
+    .btn-restart:hover {
+      box-shadow: 0 6px 25px rgba(255, 215, 0, 0.5);
+      transform: translateY(-2px);
+    }
+
+    /* ===== CASE OPEN FLASH ===== */
+    .case-flash {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 215, 0, 0.15);
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0;
+      animation: flashAnim 0.5s ease;
+    }
+
+    @keyframes flashAnim {
+      0% {
+        opacity: 0;
+      }
+
+      30% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+      }
+    }
+
+    /* ===== CONFETTI ===== */
+    .confetti-piece {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      top: -10px;
+      border-radius: 2px;
+      animation: confettiFall linear forwards;
+      pointer-events: none;
+      z-index: 1001;
+    }
+
+    @keyframes confettiFall {
+      to {
+        transform: translateY(110vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    /* ===== PROGRESS BAR ===== */
+    #progress-bar {
+      height: 4px;
+      background: rgba(255, 215, 0, 0.1);
+      border-radius: 2px;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+
+    #progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light));
+      border-radius: 2px;
+      transition: width 0.5s ease;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+
+    /* ===== ROUND INDICATOR ===== */
+    #round-indicator {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .round-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      color: rgba(255, 215, 0, 0.3);
+      transition: all 0.4s;
+    }
+
+    .round-dot.done {
+      background: rgba(255, 215, 0, 0.2);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .round-dot.current {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--navy);
+      font-weight: 700;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+      animation: currentPulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes currentPulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+      }
+
+      50% {
+        box-shadow: 0 0 25px rgba(255, 215, 0, 1);
+      }
+    }
+
+    /* ===== CASES TO OPEN COUNTER ===== */
+    #cases-counter {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .counter-text {
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      color: rgba(255, 215, 0, 0.6);
+      text-transform: uppercase;
+    }
+
+    .counter-pips {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 4px;
+    }
+
+    .pip {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255, 215, 0, 0.15);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      transition: all 0.3s;
+    }
+
+    .pip.filled {
+      background: var(--gold);
+      box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+    }
+
+    /* ===== EXPECTED VALUE ===== */
+    #ev-bar {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ev-item {
+      text-align: center;
+      flex: 1;
+    }
+
+    .ev-label {
+      font-size: 0.6rem;
+      letter-spacing: 1px;
+      color: rgba(255, 255, 255, 0.4);
+      text-transform: uppercase;
+      font-family: 'Cinzel', serif;
+    }
+
+    .ev-value {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(0.8rem, 1.8vw, 1rem);
+      color: rgba(255, 255, 255, 0.7);
+      font-weight: 700;
+    }
+
+    .ev-separator {
+      width: 1px;
+      height: 30px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Animations for value reveal */
+    @keyframes valueReveal {
+      0% {
+        transform: scale(3);
+        opacity: 0;
+        color: white;
+      }
+
+      50% {
+        transform: scale(1.5);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .value-reveal {
+      animation: valueReveal 0.6s ease forwards;
+    }
+
+    /* ===== PICK YOUR CASE SCREEN ===== */
+    #pick-screen .pick-instruction {
+      text-align: center;
+      padding: 10px;
+      margin-bottom: 12px;
+    }
+
+    #pick-screen .pick-instruction h2 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      color: var(--gold);
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+      margin-bottom: 6px;
+    }
+
+    #pick-screen .pick-instruction p {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(0.8rem, 2vw, 1rem);
+      color: rgba(255, 255, 255, 0.6);
+      letter-spacing: 1px;
+    }
+
+    /* ===== FOOTER ===== */
+    #game-footer {
+      text-align: center;
+      padding: 15px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      color: rgba(255, 215, 0, 0.2);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    /* ===== TOAST NOTIFICATION ===== */
+    #toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(255, 215, 0, 0.9);
+      color: var(--navy);
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      padding: 14px 30px;
+      border-radius: 6px;
+      letter-spacing: 2px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      transition: transform 0.4s ease;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    #toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      #main-game {
+        grid-template-columns: 1fr;
+      }
+
+      .prize-board-left,
+      .prize-board-right {
+        display: none;
+      }
+
+      .mobile-prize-board {
+        display: grid;
+      }
+    }
+
+    /* ===== BRIEFCASE OPEN CINEMATIC ===== */
+    #case-reveal-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.95) 100%);
+      z-index: 1500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      backdrop-filter: blur(8px);
+    }
+
+    #case-reveal-overlay.show {
+      display: flex;
+    }
+
+    .reveal-case-3d {
+      width: 150px;
+      height: 130px;
+      perspective: 800px;
+      margin-bottom: 20px;
+      animation: caseFloat 1s ease-in-out;
+    }
+
+    @keyframes caseFloat {
+      0% {
+        transform: scale(0.3) translateY(100px);
+        opacity: 0;
+      }
+
+      60% {
+        transform: scale(1.15) translateY(-10px);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .reveal-case-body {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(145deg, #4A3000, #2A1A00, #1A0F00);
+      border: 3px solid var(--gold);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      box-shadow: 0 0 60px rgba(255, 215, 0, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.1);
+      position: relative;
+      animation: caseShake 0.5s ease-in-out 0.8s;
+    }
+
+    @keyframes caseShake {
+
+      0%,
+      100% {
+        transform: rotate(0);
+      }
+
+      20% {
+        transform: rotate(-5deg);
+      }
+
+      40% {
+        transform: rotate(5deg);
+      }
+
+      60% {
+        transform: rotate(-3deg);
+      }
+
+      80% {
+        transform: rotate(3deg);
+      }
+    }
+
+    .reveal-case-lid {
+      position: absolute;
+      top: -3px;
+      left: -3px;
+      right: -3px;
+      height: 55%;
+      background: linear-gradient(180deg, #5A3A00, #3A2200);
+      border: 3px solid var(--gold);
+      border-radius: 10px 10px 0 0;
+      transform-origin: top center;
+      transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .reveal-case-lid.open {
+      transform: rotateX(-120deg);
+    }
+
+    .reveal-case-lid .lid-num {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.8rem;
+      color: var(--gold);
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+    }
+
+    .reveal-light-burst {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(255, 215, 0, 0.6) 0%, rgba(255, 215, 0, 0) 70%);
+      border-radius: 50%;
+      opacity: 0;
+      animation: lightBurst 0.6s ease-out 1.5s forwards;
+      pointer-events: none;
+    }
+
+    @keyframes lightBurst {
+      0% {
+        opacity: 0;
+        transform: scale(0.3);
+      }
+
+      50% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        transform: scale(2.5);
+      }
+    }
+
+    .reveal-amount {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(2rem, 8vw, 4rem);
+      color: var(--gold);
+      text-shadow: 0 0 50px rgba(255, 215, 0, 1), 0 0 100px rgba(255, 215, 0, 0.5);
+      opacity: 0;
+      transform: scale(0.5);
+      animation: amountReveal 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1.6s forwards;
+    }
+
+    .reveal-amount.low-val {
+      color: #7CB9E8;
+      text-shadow: 0 0 50px rgba(124, 185, 232, 0.8);
+    }
+
+    .reveal-amount.high-val {
+      color: #FFD700;
+      text-shadow: 0 0 50px rgba(255, 215, 0, 1);
+    }
+
+    @keyframes amountReveal {
+      0% {
+        opacity: 0;
+        transform: scale(0.5);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .reveal-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.5);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-top: 10px;
+      opacity: 0;
+      animation: fadeIn 0.4s ease 1.8s forwards;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* ===== BANKER CALL CINEMATIC ===== */
+    #banker-call-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(10, 20, 60, 0.85) 0%, rgba(0, 0, 0, 0.97) 100%);
+      z-index: 1400;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      backdrop-filter: blur(10px);
+    }
+
+    #banker-call-overlay.show {
+      display: flex;
+    }
+
+    .call-phone-icon {
+      font-size: 5rem;
+      animation: phoneVibrate 0.15s linear infinite alternate;
+      filter: drop-shadow(0 0 30px rgba(30, 64, 175, 0.8));
+    }
+
+    @keyframes phoneVibrate {
+      0% {
+        transform: rotate(-8deg) scale(1);
+      }
+
+      100% {
+        transform: rotate(8deg) scale(1.05);
+      }
+    }
+
+    .call-text {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      color: #7CB9E8;
+      letter-spacing: 4px;
+      margin-top: 20px;
+      animation: callTextPulse 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes callTextPulse {
+      0% {
+        opacity: 0.5;
+        text-shadow: none;
+      }
+
+      100% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(124, 185, 232, 0.8);
+      }
+    }
+
+    .call-rings {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border: 2px solid rgba(30, 64, 175, 0.4);
+      border-radius: 50%;
+      animation: ringExpand 1.5s ease-out infinite;
+    }
+
+    .call-rings:nth-child(2) {
+      animation-delay: 0.5s;
+    }
+
+    .call-rings:nth-child(3) {
+      animation-delay: 1s;
+    }
+
+    @keyframes ringExpand {
+      0% {
+        transform: scale(0.5);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(3);
+        opacity: 0;
+      }
+    }
+
+    .screen-shake {
+      animation: screenShake 0.5s ease-in-out;
+    }
+
+    @keyframes screenShake {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      10% {
+        transform: translateX(-5px) translateY(3px);
+      }
+
+      30% {
+        transform: translateX(5px) translateY(-3px);
+      }
+
+      50% {
+        transform: translateX(-3px) translateY(2px);
+      }
+
+      70% {
+        transform: translateX(3px) translateY(-2px);
+      }
+
+      90% {
+        transform: translateX(-2px);
+      }
+    }
+
+    /* ===== LOCK OVERLAY ===== */
+    #lock-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 5000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: var(--gold);
+      text-align: center;
+      backdrop-filter: blur(15px);
+    }
+
+    #lock-overlay.active {
+      display: flex;
+    }
+
+    .nfc-icon {
+      font-size: 8rem;
+      margin-bottom: 2rem;
+      animation: nfcPulse 2s infinite ease-in-out;
+      filter: drop-shadow(0 0 30px var(--gold));
+    }
+
+    @keyframes nfcPulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0.8;
+      }
+
+      50% {
+        transform: scale(1.1);
+        opacity: 1;
+      }
+    }
+
+    .lock-text h2 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 3rem;
+      letter-spacing: 5px;
+      margin-bottom: 1rem;
+    }
+
+    .lock-text p {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem;
+      color: var(--white);
+      opacity: 0.8;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="spotlight"></div>
+
+  <div id="header">
+    <h1>¡TRATO O NO TRATO!</h1>
+    <p>Deal or No Deal</p>
+    <div class="header-line"></div>
+  </div>
+
+  <div id="game">
+
+    <!-- ===== INTRO SCREEN ===== -->
+    <div id="intro-screen" class="phase-screen active">
+      <div style="text-align:center; padding: 20px;">
+        <p class="intro-text">
+          Ante ti hay <span>26 maletines</span>. Cada uno esconde una cantidad de dinero —
+          desde <span>$0.01</span> hasta <span>$1,000,000</span>.<br><br>
+          Elige tu maletín, luego elimina los demás.
+          El <span>Banquero</span> te hará ofertas. ¿Las aceptarás?
+        </p>
+        <div class="prize-preview" id="intro-prizes"></div>
+        <button class="btn-main" onclick="startGame()">▶ JUGAR AHORA</button>
+      </div>
+    </div>
+
+    <!-- ===== PICK SCREEN ===== -->
+    <div id="pick-screen" class="phase-screen">
+      <div class="pick-instruction">
+        <h2>⬇ ELIGE TU MALETÍN ⬇</h2>
+        <p>Este maletín será tuyo hasta el final</p>
+      </div>
+      <div id="pick-cases-grid" class=""
+        style="display:grid; grid-template-columns: repeat(5,1fr); gap:8px; max-width:700px; margin:0 auto;"></div>
+    </div>
+
+    <!-- ===== MAIN GAME ===== -->
+    <div id="main-game-screen" class="phase-screen">
+      <div id="main-game">
+
+        <!-- Left Prize Board -->
+        <div class="prize-board prize-board-left" id="prize-left"></div>
+
+        <!-- Center -->
+        <div class="center-area">
+          <div id="round-indicator"></div>
+          <div id="progress-bar">
+            <div id="progress-fill" style="width:0%"></div>
+          </div>
+
+          <div id="status-bar">
+            <div class="status-item">
+              <div class="status-label">Ronda</div>
+              <div class="status-value" id="round-display">1</div>
+            </div>
+            <div class="status-item">
+              <div class="status-label">Mi Maletín</div>
+              <div class="status-value" id="my-case-display">—</div>
+            </div>
+            <div class="status-item">
+              <div class="status-label">Valor Esperado</div>
+              <div class="status-value" id="ev-display">—</div>
+            </div>
+            <div class="status-item">
+              <div class="status-label">Mejor Oferta</div>
+              <div class="status-value" id="best-offer-display">—</div>
+            </div>
+          </div>
+
+          <div id="ev-bar">
+            <div class="ev-item">
+              <div class="ev-label">Mín. en Juego</div>
+              <div class="ev-value" id="min-val">—</div>
+            </div>
+            <div class="ev-separator"></div>
+            <div class="ev-item">
+              <div class="ev-label">Promedio</div>
+              <div class="ev-value" id="avg-val">—</div>
+            </div>
+            <div class="ev-separator"></div>
+            <div class="ev-item">
+              <div class="ev-label">Máx. en Juego</div>
+              <div class="ev-value" id="max-val">—</div>
+            </div>
+          </div>
+
+          <div id="cases-counter">
+            <div class="counter-text">Maletines a abrir esta ronda: <span id="cases-left-counter">0</span></div>
+            <div class="counter-pips" id="round-pips"></div>
+          </div>
+
+          <div id="instruction"></div>
+          <div id="cases-grid"></div>
+
+          <div id="banker-area">
+            <div class="banker-phone">📞</div>
+            <div class="banker-title">— EL BANQUERO LLAMA —</div>
+            <div class="banker-msg" id="banker-msg"></div>
+            <div class="banker-offer" id="banker-offer-val"></div>
+            <div class="banker-buttons">
+              <button class="btn-deal" onclick="makeDeal()">✓ TRATO</button>
+              <button class="btn-nodeal" onclick="noDeal()">✗ NO TRATO</button>
+            </div>
+          </div>
+
+          <!-- Mobile prize board -->
+          <div class="mobile-prize-board" id="prize-mobile"></div>
+        </div>
+
+        <!-- Right Prize Board -->
+        <div class="prize-board prize-board-right" id="prize-right"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Arcade Lock Overlay -->
+  <div id="lock-overlay" class="active">
+    <div class="nfc-icon">💳</div>
+    <div class="lock-text">
+      <h2>MODO ARCADE</h2>
+      <p>POR FAVOR, PASA TU TARJETA PARA COMENZAR</p>
+    </div>
+  </div>
+
+  <!-- ===== MODAL ===== -->
+  <div id="modal-overlay">
+    <div id="modal-box">
+      <div class="modal-icon" id="modal-icon">🎉</div>
+      <div class="modal-title" id="modal-title">¡FELICIDADES!</div>
+      <div class="modal-subtitle" id="modal-subtitle"></div>
+      <div class="modal-amount" id="modal-amount"></div>
+      <div class="modal-detail" id="modal-detail"></div>
+      <button class="btn-restart" onclick="restartGame()">↺ JUGAR DE NUEVO</button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast"></div>
+
+  <!-- Briefcase Reveal Cinematic -->
+  <div id="case-reveal-overlay">
+    <div class="reveal-light-burst"></div>
+    <div class="reveal-case-3d">
+      <div class="reveal-case-body">
+        <div class="reveal-case-lid"><span class="lid-num" id="reveal-case-num"></span></div>
+        💼
+      </div>
+    </div>
+    <div class="reveal-amount" id="reveal-amount"></div>
+    <div class="reveal-label">ELIMINADO</div>
+  </div>
+
+  <!-- Banker Call Cinematic -->
+  <div id="banker-call-overlay">
+    <div class="call-rings"></div>
+    <div class="call-rings"></div>
+    <div class="call-rings"></div>
+    <div class="call-phone-icon">📞</div>
+    <div class="call-text">EL BANQUERO ESTÁ LLAMANDO...</div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settings-overlay"
+    style="position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:2000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(5px);">
+    <div
+      style="background:var(--navy);border:2px solid var(--gold);padding:30px;border-radius:10px;text-align:center;min-width:300px;">
+      <h2 style="font-family:'Cinzel Decorative';color:var(--gold);margin-bottom:20px;" id="set-title">⚙ AJUSTES</h2>
+
+      <div style="margin-bottom:15px;text-align:left;">
+        <label id="lbl-theme"
+          style="color:var(--gold-light);font-family:'Cinzel';display:block;margin-bottom:5px;">Tema</label>
+        <select id="set-theme" onchange="onSettingChange()"
+          style="width:100%;padding:8px;background:rgba(255,255,255,0.1);color:#fff;border:1px solid var(--gold);border-radius:4px;">
+          <option value="dark" id="opt-dark">Oscuro</option>
+          <option value="light" id="opt-light">Claro</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:15px;text-align:left;">
+        <label id="lbl-lang"
+          style="color:var(--gold-light);font-family:'Cinzel';display:block;margin-bottom:5px;">Idioma</label>
+        <select id="set-lang" onchange="onSettingChange()"
+          style="width:100%;padding:8px;background:rgba(255,255,255,0.1);color:#fff;border:1px solid var(--gold);border-radius:4px;">
+          <option value="es">Español</option>
+          <option value="en">English</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:15px;text-align:left;">
+        <label id="lbl-vol"
+          style="color:var(--gold-light);font-family:'Cinzel';display:block;margin-bottom:5px;">Volumen</label>
+        <input type="range" id="set-vol" min="0" max="100" onchange="onSettingChange()" style="width:100%;">
+      </div>
+
+      <div style="margin-bottom:25px;text-align:left;">
+        <label id="lbl-bright"
+          style="color:var(--gold-light);font-family:'Cinzel';display:block;margin-bottom:5px;">Brillo</label>
+        <input type="range" id="set-bright" min="30" max="150" onchange="onSettingChange()" style="width:100%;">
+      </div>
+
+      <button onclick="closeSettings()"
+        style="padding:10px 30px;background:var(--gold);border:none;border-radius:4px;font-family:'Cinzel Decorative';font-weight:bold;cursor:pointer;"
+        id="btn-close-set">CERRAR</button>
+    </div>
+  </div>
+
+  <button onclick="openSettings()"
+    style="position:fixed;top:20px;right:20px;background:none;border:none;font-size:1.5rem;cursor:pointer;z-index:100;color:var(--gold);filter:drop-shadow(0 0 5px rgba(255,215,0,0.5));">⚙</button>
+
+  <div id="game-footer">© TRATO O NO TRATO — Un juego de decisiones</div>
+
+  <script>
+    // ===== GAME DATA =====
+    const ALL_PRIZES = [
+      { value: 0.01, tier: 'low' },
+      { value: 1, tier: 'low' },
+      { value: 5, tier: 'low' },
+      { value: 10, tier: 'low' },
+      { value: 25, tier: 'low' },
+      { value: 50, tier: 'low' },
+      { value: 75, tier: 'low' },
+      { value: 100, tier: 'low' },
+      { value: 200, tier: 'mid' },
+      { value: 300, tier: 'mid' },
+      { value: 400, tier: 'mid' },
+      { value: 500, tier: 'mid' },
+      { value: 750, tier: 'mid' },
+      { value: 1000, tier: 'mid' },
+      { value: 5000, tier: 'mid' },
+      { value: 10000, tier: 'high' },
+      { value: 25000, tier: 'high' },
+      { value: 50000, tier: 'high' },
+      { value: 75000, tier: 'high' },
+      { value: 100000, tier: 'high' },
+      { value: 200000, tier: 'high' },
+      { value: 300000, tier: 'top' },
+      { value: 400000, tier: 'top' },
+      { value: 500000, tier: 'top' },
+      { value: 750000, tier: 'top' },
+      { value: 1000000, tier: 'top' }
+    ];
+
+    // Dynamic round calculation based on prize count
+    const TOTAL_CASES = ALL_PRIZES.length;
+    function buildRoundCases() {
+      const toOpen = TOTAL_CASES - 1;
+      const base = [6, 5, 4, 3, 2, 1, 1, 1, 1];
+      const rounds = []; let sum = 0;
+      for (let i = 0; i < base.length && sum < toOpen; i++) {
+        const r = Math.min(base[i], toOpen - sum);
+        if (r > 0) { rounds.push(r); sum += r; }
+      }
+      while (sum < toOpen) { rounds.push(1); sum++; }
+      return rounds;
+    }
+    let ROUND_CASES = buildRoundCases();
+    let TOTAL_ROUNDS = ROUND_CASES.length;
+
+    // ===== SETTINGS =====
+    let settings = {
+      volume: 0.8, brightness: 1, theme: 'dark', lang: 'es'
+    };
+    function loadSettings() {
+      try { const s = JSON.parse(localStorage.getItem('dondSettings')); if (s) settings = { ...settings, ...s }; } catch (e) { }
+      applySettings();
+    }
+    function saveSettings() { localStorage.setItem('dondSettings', JSON.stringify(settings)); }
+    function applySettings() {
+      document.body.style.filter = `brightness(${settings.brightness})`;
+      document.body.classList.toggle('light-theme', settings.theme === 'light');
+      document.documentElement.lang = settings.lang;
+      updateAllText();
+    }
+
+    // ===== LÓGICA DE INTEGRACIÓN ARCADE (NFC) =====
+    let jugadorActual = null;
+    let juegoBloqueado = true; // El juego inicia bloqueado hasta pasar la tarjeta
+
+    // IMPORTANTE: Si estás usando Live Server (puerto 5500), 
+    // debes mandar las peticiones a XAMPP para que PHP funcione.
+    const SERVER_URL = window.location.port === "5500" ? "http://localhost/" : "";
+
+    // Función para revisar si el ESP32 registró una tarjeta
+    async function revisarSesionNFC() {
+      if (!juegoBloqueado) return;
+      try {
+        const response = await fetch(SERVER_URL + 'sesion_activa.txt?t=' + new Date().getTime());
+        if (!response.ok) return;
+
+        const uid = await response.text();
+        const cleanUid = uid.trim();
+
+        if (cleanUid !== "") {
+          console.log("Archivo sesión contiene: [" + cleanUid + "]");
+          if (cleanUid.length >= 4 && cleanUid !== jugadorActual) {
+            jugadorActual = cleanUid;
+            desbloquearJuego(jugadorActual);
+            // IMPORTANTE: Consumir el UID inmediatamente para que el archivo quede vacío
+            limpiarSesionNFC();
+          }
+        }
+      } catch (e) { }
+    }
+
+    async function limpiarSesionNFC() {
+      try {
+        const datos = new URLSearchParams();
+        datos.append('limpiar_sesion', '1');
+        await fetch(SERVER_URL + 'arcade_handler.php', {
+          method: 'POST',
+          body: datos,
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        });
+        console.log("Servidor: Archivo sesion_activa.txt vaciado");
+      } catch (e) {
+        console.error("Error al limpiar:", e);
+      }
+    }
+
+    let intervaloNFC = null;
+    function iniciarMonitoreoNFC() {
+      if (intervaloNFC) clearInterval(intervaloNFC);
+      intervaloNFC = setInterval(revisarSesionNFC, 1500);
+      console.log("Monitoreo NFC iniciado");
+    }
+
+    function desbloquearJuego(uid) {
+      if (!juegoBloqueado) return;
+      juegoBloqueado = false;
+      showToast("¡Tarjeta Detectada! Bienvenido: " + uid);
+      sfxClick();
+      const lockOverlay = document.getElementById('lock-overlay');
+      if (lockOverlay) lockOverlay.classList.remove('active');
+    }
+
+    function enviarPuntajeABaseDeDatos(montoDinero) {
+      if (!jugadorActual) return;
+
+      // Cálculo de puntos: 1,000,000 = 400 puntos
+      // Reducción proporcional por cantidad
+      const puntos = Math.max(0, Math.round((montoDinero / 1000000) * 400));
+
+      console.log(`Calculando puntos para $${montoDinero}: ${puntos} pts`);
+
+      const datos = new URLSearchParams();
+      datos.append('guardar_puntos', '1');
+      datos.append('uid', jugadorActual);
+      datos.append('puntos', puntos);
+
+      fetch(SERVER_URL + 'arcade_handler.php', {
+        method: 'POST',
+        body: datos,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+      })
+        .then(res => res.text())
+        .then(msg => {
+          console.log("Servidor dice: " + msg);
+          showToast(`¡Has ganado ${puntos} puntos!`);
+        })
+        .catch(err => console.error("Error al conectar con la DB:", err));
+    }
+
+
+
+    // ===== i18n =====
+    const TEXTS = {
+      es: {
+        title: '¡TRATO O NO TRATO!', subtitle: 'Deal or No Deal',
+        intro: 'Ante ti hay <span>{n} maletines</span>. Cada uno esconde una cantidad de dinero. Elige tu maletín, luego elimina los demás. El <span>Banquero</span> te hará ofertas. ¿Las aceptarás?',
+        play: '▶ JUGAR AHORA', pickTitle: '⬇ ELIGE TU MALETÍN ⬇', pickSub: 'Este maletín será tuyo hasta el final',
+        round: 'Ronda', myCase: 'Mi Maletín', ev: 'Valor Esperado', bestOffer: 'Mejor Oferta',
+        minLabel: 'Mín. en Juego', avgLabel: 'Promedio', maxLabel: 'Máx. en Juego',
+        casesLeft: 'Maletines a abrir esta ronda:',
+        roundInstr: 'Ronda {r} — Abre {n} maletín{s} más',
+        bankerTitle: '— EL BANQUERO LLAMA —', deal: '✓ TRATO', nodeal: '✗ NO TRATO',
+        dealDone: '¡TRATO HECHO!', dealSub: 'Aceptaste la oferta del Banquero',
+        yourCase: '¡AQUÍ ESTÁ TU MALETÍN!', restart: '↺ JUGAR DE NUEVO',
+        noDealToast: '¡NO TRATO! ¡Sigue adelante!', caseToast: '¡Maletín #{n} es tuyo!',
+        eliminated: 'ELIMINADO', bankerCalling: 'EL BANQUERO ESTÁ LLAMANDO...',
+        footer: '© TRATO O NO TRATO — Un juego de decisiones',
+        settingsTitle: '⚙ AJUSTES', themeLabel: 'Tema', themeDark: 'Oscuro', themeLight: 'Claro',
+        langLabel: 'Idioma', volLabel: 'Volumen', brightLabel: 'Brillo', closeSettings: 'CERRAR',
+        bankerMsgs: ['El Banquero ha evaluado tu situación...', 'Tras analizar los maletines restantes, te ofrece:', 'El Banquero quiere hacer negocios.', 'Ha llegado el momento de decidir.', '¿Tendrás el valor de rechazar esto?', 'Oferta final del momento:'],
+        good: '¡Tomaste la decisión correcta!', bad: '¡Lástima! Tu maletín era mejor...', ok: 'Tomaste una buena decisión.',
+        million: '¡EL MILLÓN! ¡INCREÍBLE!', great: '¡Un premio fantástico!', decent: 'Un buen resultado.', meh: 'No estuvo mal.', bad2: '¡Mejor suerte la próxima vez!',
+        lastOffer: 'La última oferta del Banquero fue', betterCase: '¡Tu maletín era mejor!', bankerKnew: 'El Banquero sabía algo...',
+        contained: 'Tu maletín #{n} contenía'
+      },
+      en: {
+        title: 'DEAL OR NO DEAL!', subtitle: 'Deal or No Deal',
+        intro: 'Before you are <span>{n} briefcases</span>. Each one hides money. Pick your case, then eliminate the rest. The <span>Banker</span> will make offers. Will you accept?',
+        play: '▶ PLAY NOW', pickTitle: '⬇ PICK YOUR CASE ⬇', pickSub: 'This case will be yours until the end',
+        round: 'Round', myCase: 'My Case', ev: 'Expected Value', bestOffer: 'Best Offer',
+        minLabel: 'Min. in Play', avgLabel: 'Average', maxLabel: 'Max. in Play',
+        casesLeft: 'Cases to open this round:',
+        roundInstr: 'Round {r} — Open {n} more case{s}',
+        bankerTitle: '— THE BANKER IS CALLING —', deal: '✓ DEAL', nodeal: '✗ NO DEAL',
+        dealDone: 'DEAL!', dealSub: 'You accepted the Banker\'s offer',
+        yourCase: 'HERE IS YOUR CASE!', restart: '↺ PLAY AGAIN',
+        noDealToast: 'NO DEAL! Keep going!', caseToast: 'Case #{n} is yours!',
+        eliminated: 'ELIMINATED', bankerCalling: 'THE BANKER IS CALLING...',
+        footer: '© DEAL OR NO DEAL — A game of decisions',
+        settingsTitle: '⚙ SETTINGS', themeLabel: 'Theme', themeDark: 'Dark', themeLight: 'Light',
+        langLabel: 'Language', volLabel: 'Volume', brightLabel: 'Brightness', closeSettings: 'CLOSE',
+        bankerMsgs: ['The Banker evaluated your situation...', 'After analyzing the remaining cases:', 'The Banker wants to make a deal.', 'Time to decide.', 'Dare you refuse this?', 'Final offer of the moment:'],
+        good: 'You made the right choice!', bad: 'Too bad! Your case was better...', ok: 'Good decision.',
+        million: 'THE MILLION! INCREDIBLE!', great: 'A fantastic prize!', decent: 'A good result.', meh: 'Not bad.', bad2: 'Better luck next time!',
+        lastOffer: 'The Banker\'s last offer was', betterCase: 'Your case was better!', bankerKnew: 'The Banker knew something...',
+        contained: 'Your case #{n} contained'
+      }
+    };
+    function T(key) { return TEXTS[settings.lang]?.[key] || TEXTS.es[key] || key; }
+
+    // ===== GAME STATE =====
+    let state = {};
+
+    // ===== SOUND SYSTEM (Web Audio API) =====
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let audioCtx;
+    function ensureAudio() { if (!audioCtx) audioCtx = new AudioCtx(); }
+    function playTone(freq, dur, type = 'sine', vol = 0.15) {
+      ensureAudio();
+      const v = vol * settings.volume;
+      if (v < 0.001) return;
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = type; o.frequency.value = freq;
+      g.gain.setValueAtTime(v, audioCtx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(); o.stop(audioCtx.currentTime + dur);
+    }
+    function sfxCaseOpen() { playTone(600, 0.1, 'square', 0.1); setTimeout(() => playTone(900, 0.15, 'sine', 0.12), 80); }
+    // REVERSED: happy chirp for LOW values (good - we eliminated junk)
+    function sfxGoodReveal() { playTone(800, 0.15, 'sine', 0.12); setTimeout(() => playTone(1000, 0.15, 'sine', 0.12), 120); setTimeout(() => playTone(1300, 0.3, 'sine', 0.1), 240); }
+    // REVERSED: sad descending tone for HIGH values (bad - we lost big money)
+    function sfxBadReveal() { playTone(400, 0.3, 'sawtooth', 0.1); setTimeout(() => playTone(300, 0.4, 'sawtooth', 0.08), 200); setTimeout(() => playTone(200, 0.5, 'sawtooth', 0.06), 400); }
+    function sfxPhoneRing() { for (let i = 0; i < 6; i++) setTimeout(() => { playTone(1200, 0.08, 'square', 0.07); setTimeout(() => playTone(1400, 0.08, 'square', 0.07), 100); }, i * 400); }
+    function sfxDeal() { [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => playTone(f, 0.3, 'sine', 0.1), i * 150)); }
+    function sfxNoDeal() { playTone(300, 0.3, 'sawtooth', 0.1); setTimeout(() => playTone(200, 0.4, 'sawtooth', 0.08), 200); }
+    function sfxClick() { playTone(1000, 0.05, 'square', 0.06); }
+    function sfxDrumroll() { for (let i = 0; i < 20; i++) setTimeout(() => playTone(100 + Math.random() * 50, 0.05, 'square', 0.04 + i * 0.003), i * 60); }
+    function sfxWin() { [523, 659, 784, 1047, 1318].forEach((f, i) => setTimeout(() => playTone(f, 0.4, 'sine', 0.12), i * 120)); }
+    function sfxSelect() { playTone(500, 0.1, 'sine', 0.1); setTimeout(() => playTone(700, 0.15, 'sine', 0.1), 80); }
+
+    // ===== CINEMATIC BRIEFCASE REVEAL =====
+    function showCaseReveal(caseId, value, tier, callback) {
+      const overlay = document.getElementById('case-reveal-overlay');
+      document.getElementById('reveal-case-num').textContent = caseId;
+      const amountEl = document.getElementById('reveal-amount');
+      amountEl.textContent = fmtFull(value);
+      amountEl.className = 'reveal-amount ' + (value >= 10000 ? 'high-val' : 'low-val');
+      overlay.innerHTML = overlay.innerHTML;
+      overlay.classList.add('show');
+      sfxDrumroll();
+      setTimeout(() => {
+        const lid = overlay.querySelector('.reveal-case-lid');
+        if (lid) lid.classList.add('open');
+        sfxCaseOpen();
+        // High value = sad (bad for player), Low value = happy (good for player)
+        setTimeout(() => { value >= 10000 ? sfxBadReveal() : sfxGoodReveal(); }, 300);
+      }, 1300);
+      setTimeout(() => { overlay.classList.remove('show'); if (callback) callback(); }, 3200);
+    }
+
+    // ===== CINEMATIC BANKER CALL =====
+    function showBankerCallAnimation(callback) {
+      const overlay = document.getElementById('banker-call-overlay');
+      overlay.innerHTML = overlay.innerHTML;
+      overlay.classList.add('show');
+      document.body.classList.add('screen-shake');
+      sfxPhoneRing();
+      setTimeout(() => document.body.classList.remove('screen-shake'), 500);
+      setTimeout(() => { overlay.classList.remove('show'); if (callback) callback(); }, 3000);
+    }
+
+    function initState() {
+      const shuffled = shuffle([...ALL_PRIZES]);
+      const cases = shuffled.map((p, i) => ({
+        id: i + 1,
+        prize: p,
+        opened: false,
+        isMine: false
+      }));
+      state = {
+        cases,
+        myCase: null,
+        round: 0,
+        casesOpenedThisRound: 0,
+        phase: 'pick', // pick, play, banker, ended
+        bankerOffer: 0,
+        bestOffer: 0,
+        offerHistory: [],
+        totalOpened: 0
+      };
+    }
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // ===== FORMAT MONEY =====
+    function fmt(val) {
+      if (val < 1) return '$0.01';
+      if (val >= 1000000) return '$1,000,000';
+      if (val >= 1000) return '$' + (val >= 100000 ? (val / 1000).toFixed(0) + 'K' : val.toLocaleString('es-MX'));
+      return '$' + val.toLocaleString('es-MX');
+    }
+    function fmtFull(val) {
+      if (val < 1) return '$0.01';
+      return '$' + val.toLocaleString('es-MX', { minimumFractionDigits: val < 1 ? 2 : 0, maximumFractionDigits: val < 1 ? 2 : 0 });
+    }
+
+    // ===== START GAME =====
+    function startGame() {
+      if (juegoBloqueado) {
+        showToast("Por favor, pasa tu tarjeta NFC para jugar");
+        return;
+      }
+      sfxClick();
+      initState();
+      showScreen('pick-screen');
+      renderPickCases();
+    }
+
+    function showScreen(id) {
+      document.querySelectorAll('.phase-screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    // ===== INTRO PRIZES PREVIEW =====
+    function renderIntroPreview() {
+      const container = document.getElementById('intro-prizes');
+      const sample = [
+        { label: '$0.01 – $100', tier: 'low' },
+        { label: '$200 – $5,000', tier: 'mid' },
+        { label: '$10K – $200K', tier: 'high' },
+        { label: '$300K – $1M', tier: 'top' }
+      ];
+      container.innerHTML = sample.map(s =>
+        `<div class="prize-item ${s.tier}">${s.label}</div>`
+      ).join('');
+    }
+
+    // ===== PICK SCREEN =====
+    function renderPickCases() {
+      const grid = document.getElementById('pick-cases-grid');
+      grid.innerHTML = '';
+      state.cases.forEach(c => {
+        const div = document.createElement('div');
+        div.className = 'briefcase';
+        div.innerHTML = `<div class="case-icon">💼</div><div class="case-num">${c.id}</div>`;
+        div.onclick = () => pickMyCase(c.id);
+        grid.appendChild(div);
+      });
+    }
+
+    function pickMyCase(caseId) {
+      sfxSelect();
+      state.myCase = caseId;
+      state.cases.find(c => c.id === caseId).isMine = true;
+      state.round = 1;
+      state.phase = 'play';
+      showScreen('main-game-screen');
+      renderMainGame();
+      showToast(`¡Maletín #${caseId} es tuyo!`);
+    }
+
+    // ===== MAIN GAME RENDER =====
+    function renderMainGame() {
+      renderPrizeBoards();
+      renderCasesGrid();
+      renderRoundIndicator();
+      updateStatusBar();
+      updateInstruction();
+      updatePips();
+      document.getElementById('banker-area').classList.remove('show');
+    }
+
+    function renderPrizeBoards() {
+      const prizes = [...ALL_PRIZES].sort((a, b) => a.value - b.value);
+      const half = Math.ceil(prizes.length / 2);
+      const leftPrizes = prizes.slice(0, half);
+      const rightPrizes = prizes.slice(half);
+
+      function makePrizeTag(p) {
+        const isEliminated = state.cases.some(c => c.prize.value === p.value && c.opened);
+        const div = document.createElement('div');
+        div.className = `prize-tag ${isEliminated ? 'eliminated' : 'active ' + p.tier}`;
+        div.id = `prize-${p.value}`;
+        div.textContent = fmtFull(p.value);
+        return div;
+      }
+
+      ['prize-left', 'prize-right', 'prize-mobile'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = '';
+      });
+
+      leftPrizes.forEach(p => {
+        const tag = makePrizeTag(p);
+        document.getElementById('prize-left').appendChild(tag.cloneNode(true));
+        document.getElementById('prize-mobile').appendChild(tag);
+      });
+      rightPrizes.forEach(p => {
+        const tag = makePrizeTag(p);
+        document.getElementById('prize-right').appendChild(tag.cloneNode(true));
+      });
+    }
+
+    function eliminatePrizeTag(value) {
+      document.querySelectorAll(`[id="prize-${value}"], #prize-mobile .prize-tag`).forEach(el => {
+        if (el.id === `prize-${value}` || el.textContent === fmtFull(value)) {
+          el.className = 'prize-tag eliminated';
+        }
+      });
+      // More targeted
+      document.querySelectorAll('.prize-tag').forEach(el => {
+        const txt = el.textContent.replace(/[$,]/g, '').replace(/\.01$/, '0.01');
+        const v = parseFloat(el.textContent.replace(/[$,]/g, ''));
+        if (Math.abs(v - value) < 0.001) {
+          el.className = 'prize-tag eliminated';
+        }
+      });
+    }
+
+    function renderCasesGrid() {
+      const grid = document.getElementById('cases-grid');
+      grid.innerHTML = '';
+      state.cases.forEach(c => {
+        const div = document.createElement('div');
+        let cls = 'briefcase';
+        if (c.isMine) cls += ' my-case';
+        else if (c.opened) cls += ' opened';
+        else if (state.phase !== 'play') cls += ' disabled';
+
+        div.className = cls;
+        div.id = `case-${c.id}`;
+
+        const icon = c.isMine ? '⭐' : c.opened ? '📭' : '💼';
+        div.innerHTML = `<div class="case-icon">${icon}</div><div class="case-num">${c.id}</div>`;
+
+        if (!c.isMine && !c.opened && state.phase === 'play') {
+          div.onclick = () => openCase(c.id);
+        }
+        grid.appendChild(div);
+      });
+
+      // Update my-case display
+      document.getElementById('my-case-display').textContent = `#${state.myCase}`;
+    }
+
+    function renderRoundIndicator() {
+      const container = document.getElementById('round-indicator');
+      container.innerHTML = '';
+      for (let r = 1; r <= TOTAL_ROUNDS; r++) {
+        const dot = document.createElement('div');
+        dot.className = 'round-dot';
+        if (r < state.round) { dot.className += ' done'; dot.textContent = '✓'; }
+        else if (r === state.round) { dot.className += ' current'; dot.textContent = r; }
+        else { dot.textContent = r; }
+        container.appendChild(dot);
+      }
+    }
+
+    function updateStatusBar() {
+      document.getElementById('round-display').textContent = state.round;
+      const remaining = getRemainingPrizes();
+      const ev = remaining.reduce((a, b) => a + b, 0) / remaining.length;
+      const minV = Math.min(...remaining);
+      const maxV = Math.max(...remaining);
+
+      document.getElementById('ev-display').textContent = fmt(ev);
+      document.getElementById('min-val').textContent = fmt(minV);
+      document.getElementById('max-val').textContent = fmt(maxV);
+      document.getElementById('avg-val').textContent = fmt(ev);
+      document.getElementById('best-offer-display').textContent = state.bestOffer > 0 ? fmt(state.bestOffer) : '—';
+
+      const progress = (state.totalOpened / (TOTAL_CASES - 1)) * 100;
+      document.getElementById('progress-fill').style.width = progress + '%';
+    }
+
+    function updateInstruction() {
+      const el = document.getElementById('instruction');
+      const toOpen = ROUND_CASES[state.round - 1] || 1;
+      const opened = state.casesOpenedThisRound;
+      const left = toOpen - opened;
+      if (state.phase === 'play') {
+        el.textContent = T('roundInstr').replace('{r}', state.round).replace('{n}', left).replace('{s}', left !== 1 ? 's' : '');
+      }
+    }
+
+    function updatePips() {
+      const toOpen = ROUND_CASES[state.round - 1];
+      const opened = state.casesOpenedThisRound;
+      document.getElementById('cases-left-counter').textContent = toOpen - opened;
+
+      const container = document.getElementById('round-pips');
+      container.innerHTML = '';
+      for (let i = 0; i < toOpen; i++) {
+        const pip = document.createElement('div');
+        pip.className = 'pip' + (i < opened ? ' filled' : '');
+        container.appendChild(pip);
+      }
+    }
+
+    function getRemainingPrizes() {
+      return state.cases
+        .filter(c => !c.opened && !c.isMine)
+        .map(c => c.prize.value)
+        .concat([state.cases.find(c => c.isMine).prize.value]);
+    }
+
+    // ===== OPEN CASE =====
+    function openCase(caseId) {
+      if (state.phase !== 'play') return;
+      const c = state.cases.find(c => c.id === caseId);
+      if (!c || c.opened || c.isMine) return;
+
+      state.phase = 'revealing'; // prevent double clicks
+      c.opened = true;
+      state.casesOpenedThisRound++;
+      state.totalOpened++;
+
+      // Show cinematic reveal
+      showCaseReveal(caseId, c.prize.value, c.prize.tier, () => {
+        // Update the case visually
+        const caseEl = document.getElementById(`case-${caseId}`);
+        if (caseEl) {
+          caseEl.className = 'briefcase opened';
+          caseEl.innerHTML = `<div class="case-icon">📭</div><div class="case-num">${caseId}</div>`;
+        }
+        eliminatePrizeTag(c.prize.value);
+        updateStatusBar();
+        updatePips();
+
+        // Check if only player's case remains
+        const remaining = state.cases.filter(cc => !cc.opened && !cc.isMine);
+        if (remaining.length === 0) {
+          setTimeout(() => finalReveal(), 800);
+          return;
+        }
+
+        // Check round end
+        const roundTotal = ROUND_CASES[state.round - 1] || 1;
+        if (state.casesOpenedThisRound >= roundTotal) {
+          setTimeout(() => showBankerOffer(), 600);
+        } else {
+          state.phase = 'play';
+          updateInstruction();
+        }
+      });
+    }
+
+    // ===== BANKER OFFER =====
+    function showBankerOffer() {
+      state.phase = 'banker';
+      const remaining = getRemainingPrizes();
+      const ev = remaining.reduce((a, b) => a + b, 0) / remaining.length;
+      const progress = state.totalOpened / (TOTAL_CASES - 1);
+      const factor = 0.1 + (progress * 0.75) + (Math.random() * 0.1 - 0.05);
+      const offer = Math.round(ev * Math.min(factor, 0.95));
+
+      state.bankerOffer = offer;
+      if (offer > state.bestOffer) state.bestOffer = offer;
+      state.offerHistory.push(offer);
+
+      // Show cinematic call animation first
+      showBankerCallAnimation(() => {
+        document.getElementById('best-offer-display').textContent = fmt(state.bestOffer);
+        const messages = [
+          `El Banquero ha evaluado tu situación... su oferta es:`,
+          `Tras analizar los maletines restantes, te ofrece:`,
+          `El Banquero quiere hacer negocios contigo. Su propuesta:`,
+          `Ha llegado el momento de decidir. La oferta del Banquero:`,
+          `¿Tendrás el valor de rechazar esto? El Banquero ofrece:`,
+          `El Banquero está impaciente. Su oferta final del momento:`,
+        ];
+        document.getElementById('banker-msg').textContent = messages[Math.min(state.round - 1, messages.length - 1)];
+        document.getElementById('banker-offer-val').textContent = fmtFull(offer);
+
+        document.querySelectorAll('.briefcase:not(.opened):not(.my-case)').forEach(el => {
+          el.classList.add('disabled');
+          el.onclick = null;
+        });
+        document.getElementById('banker-area').classList.add('show');
+        const phone = document.querySelector('.banker-phone');
+        phone.style.animation = 'none';
+        void phone.offsetWidth;
+        phone.style.animation = 'phonering 0.5s ease-in-out 3';
+      });
+    }
+
+    function makeDeal() {
+      sfxDeal();
+      const offer = state.bankerOffer;
+      state.phase = 'ended';
+      document.getElementById('banker-area').classList.remove('show');
+      const myCase = state.cases.find(c => c.isMine);
+      const myCaseVal = myCase.prize.value;
+      const detail = offer > myCaseVal
+        ? `Tu maletín #${state.myCase} contenía <strong>${fmtFull(myCaseVal)}</strong>. ¡Tomaste la decisión correcta!`
+        : `Tu maletín #${state.myCase} contenía <strong>${fmtFull(myCaseVal)}</strong>. ${myCaseVal > offer * 2 ? '¡Lástima! Tu maletín era mejor...' : 'Tomaste una buena decisión.'}`;
+      showModal('✅', '¡TRATO HECHO!', `Aceptaste la oferta del Banquero`, fmtFull(offer), detail);
+      if (offer >= 50000) { launchConfetti(); sfxWin(); }
+      enviarPuntajeABaseDeDatos(offer);
+    }
+
+    function noDeal() {
+      sfxNoDeal();
+      state.phase = 'play';
+      state.round++;
+      state.casesOpenedThisRound = 0;
+      document.getElementById('banker-area').classList.remove('show');
+      renderCasesGrid();
+      renderRoundIndicator();
+      updateInstruction();
+      updatePips();
+      showToast('¡NO TRATO! ¡Sigue adelante!');
+    }
+
+    // ===== FINAL REVEAL =====
+    function finalReveal() {
+      state.phase = 'ended';
+      const myCase = state.cases.find(c => c.isMine);
+      const val = myCase.prize.value;
+      const isGood = val >= 100000;
+      const icon = isGood ? '🏆' : val >= 10000 ? '😊' : val >= 1000 ? '😐' : '😅';
+      let subtitle = val >= 1000000 ? '¡EL MILLÓN! ¡INCREÍBLE!' :
+        val >= 100000 ? '¡Un premio fantástico!' :
+          val >= 10000 ? 'Un buen resultado.' :
+            val >= 1000 ? 'No estuvo mal.' :
+              '¡Mejor suerte la próxima vez!';
+      const lastOffer = state.offerHistory[state.offerHistory.length - 1] || 0;
+      const comparison = lastOffer > 0
+        ? `La última oferta del Banquero fue <strong>${fmtFull(lastOffer)}</strong>. ${val > lastOffer ? '¡Tu maletín era mejor!' : 'El Banquero sabía algo...'}`
+        : '';
+      sfxWin();
+      showModal(icon, '¡AQUÍ ESTÁ TU MALETÍN!', subtitle, fmtFull(val), comparison);
+      if (isGood) launchConfetti();
+      enviarPuntajeABaseDeDatos(val);
+    }
+
+    // ===== MODAL =====
+    function showModal(icon, title, subtitle, amount, detail) {
+      document.getElementById('modal-icon').textContent = icon;
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-subtitle').textContent = subtitle;
+      document.getElementById('modal-amount').textContent = amount;
+      document.getElementById('modal-detail').innerHTML = detail;
+      document.getElementById('modal-overlay').classList.add('show');
+    }
+
+    // ===== CONFETTI =====
+    function launchConfetti() {
+      const colors = ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8'];
+      for (let i = 0; i < 80; i++) {
+        setTimeout(() => {
+          const c = document.createElement('div');
+          c.className = 'confetti-piece';
+          c.style.left = Math.random() * 100 + 'vw';
+          c.style.background = colors[Math.floor(Math.random() * colors.length)];
+          c.style.animationDuration = (2 + Math.random() * 3) + 's';
+          c.style.animationDelay = (Math.random() * 2) + 's';
+          c.style.transform = `rotate(${Math.random() * 360}deg)`;
+          c.style.width = (6 + Math.random() * 8) + 'px';
+          c.style.height = (6 + Math.random() * 8) + 'px';
+          document.body.appendChild(c);
+          setTimeout(() => c.remove(), 6000);
+        }, i * 50);
+      }
+    }
+
+    // ===== TOAST =====
+    let toastTimeout;
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => el.classList.remove('show'), 2500);
+    }
+
+    // ===== RESTART =====
+    async function restartGame() {
+      // Ocultar modal
+      document.getElementById('modal-overlay').classList.remove('show');
+
+      // Reiniciar estado de bloqueo
+      juegoBloqueado = true;
+      jugadorActual = null;
+
+      // Limpiar archivo en el servidor para que no detecte la misma tarjeta de inmediato
+      await limpiarSesionNFC();
+
+      // Mostrar el overlay de bloqueo
+      const lockOverlay = document.getElementById('lock-overlay');
+      if (lockOverlay) lockOverlay.classList.add('active');
+
+      showScreen('intro-screen');
+    }
+
+    // ===== UPDATE ALL TEXT (i18n) =====
+    function updateAllText() {
+      const h = document.getElementById('header');
+      if (h) { h.querySelector('h1').textContent = T('title'); h.querySelector('p').textContent = T('subtitle'); }
+      const fb = document.getElementById('game-footer');
+      if (fb) fb.textContent = T('footer');
+      const rl = document.querySelector('.reveal-label');
+      if (rl) rl.textContent = T('eliminated');
+      const ct = document.querySelector('.call-text');
+      if (ct) ct.textContent = T('bankerCalling');
+
+      // Update settings menu
+      document.getElementById('set-title').textContent = T('settingsTitle');
+      document.getElementById('lbl-theme').textContent = T('themeLabel');
+      document.getElementById('opt-dark').textContent = T('themeDark');
+      document.getElementById('opt-light').textContent = T('themeLight');
+      document.getElementById('lbl-lang').textContent = T('langLabel');
+      document.getElementById('lbl-vol').textContent = T('volLabel');
+      document.getElementById('lbl-bright').textContent = T('brightLabel');
+      document.getElementById('btn-close-set').textContent = T('closeSettings');
+
+      // Update screens if they exist
+      const it = document.querySelector('.intro-text');
+      if (it) it.innerHTML = T('intro').replace('{n}', TOTAL_CASES);
+      const pb = document.querySelector('.btn-main');
+      if (pb) pb.textContent = T('play');
+      const pi = document.querySelector('.pick-instruction h2');
+      if (pi) pi.textContent = T('pickTitle');
+      const ps = document.querySelector('.pick-instruction p');
+      if (ps) ps.textContent = T('pickSub');
+
+      // Status bar
+      try {
+        document.querySelectorAll('.status-label')[0].textContent = T('round');
+        document.querySelectorAll('.status-label')[1].textContent = T('myCase');
+        document.querySelectorAll('.status-label')[2].textContent = T('ev');
+        document.querySelectorAll('.status-label')[3].textContent = T('bestOffer');
+        document.getElementById('min-val').previousElementSibling.textContent = T('minLabel');
+        document.getElementById('avg-val').previousElementSibling.textContent = T('avgLabel');
+        document.getElementById('max-val').previousElementSibling.textContent = T('maxLabel');
+      } catch (e) { }
+    }
+
+    // ===== SETTINGS MENU =====
+    function openSettings() {
+      sfxClick();
+      const m = document.getElementById('settings-overlay');
+      document.getElementById('set-vol').value = settings.volume * 100;
+      document.getElementById('set-bright').value = settings.brightness * 100;
+      document.getElementById('set-theme').value = settings.theme;
+      document.getElementById('set-lang').value = settings.lang;
+      m.style.display = 'flex';
+    }
+    function closeSettings() {
+      document.getElementById('settings-overlay').style.display = 'none';
+    }
+    function onSettingChange() {
+      settings.volume = document.getElementById('set-vol').value / 100;
+      settings.brightness = document.getElementById('set-bright').value / 100;
+      settings.theme = document.getElementById('set-theme').value;
+      settings.lang = document.getElementById('set-lang').value;
+      saveSettings(); applySettings();
+    }
+
+    // ===== INIT =====
+    async function init() {
+      loadSettings();
+      renderIntroPreview();
+
+      // 1. Limpiamos el archivo en el servidor PRIMERO
+      await limpiarSesionNFC();
+
+      // 2. Solo DESPUÉS de limpiar, empezamos a monitorear
+      iniciarMonitoreoNFC();
+    }
+    init();
+  </script>
+</body>
+
+</html>

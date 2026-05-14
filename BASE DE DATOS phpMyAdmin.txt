@@ -1,0 +1,18 @@
+BASE DE DATOS phpMyAdmin
+
+CREATE DATABASE arcade_nfc;
+USE arcade_nfc;
+
+CREATE TABLE jugadores (
+    uid_hex VARCHAR(20) PRIMARY KEY,
+    puntos_totales INT DEFAULT 0,
+    ultima_sesion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Tabla para el historial de partidas
+CREATE TABLE partidas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    uid_hex VARCHAR(20),
+    puntos_ganados INT,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
